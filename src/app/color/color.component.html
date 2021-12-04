@@ -1,0 +1,146 @@
+<br/>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Add Color</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row>">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+              <table border="0" width="100%">
+                <tr class="trHeight">
+                  <td style="width: 150px;">
+                    <label for="inputEmail3" class="col-form-label">Color Name</label>
+                  </td>
+                  <td>
+                    <input type="text" [(ngModel)]="color.colorName" class="form-control" id="inputEmail3"
+                           placeholder="Color Name"
+                           style="background-color: #EEFAFF;">
+                  </td>
+                </tr>
+                <tr class="trHeight">
+                  <td></td>
+                  <td align="right">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            (click)="createColor()">
+                      <b>Add</b>
+                    </button>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+                      <b>Cancel</b>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Color Name</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let color of colors">
+              <td>
+                <div *ngIf="showEdit != color.code">
+                  {{color.name}}
+                </div>
+                <div *ngIf="showEdit == color.code">
+                  <input id="name_{{color.code}}" class="form-control" value="{{color.name}}">
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-link" (click)="viewShowEdit(color.code)">
+                  <mat-icon>create</mat-icon>
+                </button>
+                <div *ngIf="showEdit == color.code">
+                  <button class="btn btn-link" (click)="updateColor(color.code)">
+                    <mat-icon>done</mat-icon>
+                  </button>
+                </div>
+                <button class="btn btn-link">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Retail</b></h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Retail Name"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Max Count"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+              <b>Add</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

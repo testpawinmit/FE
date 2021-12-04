@@ -1,0 +1,427 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div class="row" *ngIf="pageView == 1">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Create Appointment</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <br/>
+          <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Name</th>
+              <th>Image</th>
+              <th>Select</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let pet of pets">
+              <td>{{pet.petName}}</td>
+              <td><img src="{{imgURL}}{{pet.petCode}}.jpg" height="100px" width="100px"/></td>
+              <td>
+                <div *ngIf="pet.checkElement">
+                  <mat-checkbox [checked]="true" (click)="selectPet(pet)"></mat-checkbox>
+                </div>
+                <div *ngIf="!pet.checkElement">
+                  <mat-checkbox [checked]="false" (click)="selectPet(pet)"></mat-checkbox>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                          (click)="changeTab(2)">
+                    <b>Next</b>
+                  </button>
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="row" *ngIf="pageView == 2">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Appointment Details</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+              <br/>
+              <br/>
+            </div>
+          </div>
+          <br/>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Service Category</label>
+            <div class="col-sm-5">
+              <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="text-truncate">{{ selectedValue ? selectedValue : 'Select Service Category' }}</span>
+                </a>
+                <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                  <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="searchValue"
+                         (ngModelChange)="filterDropdown($event)" placeholder="Search">
+                  <mat-option *ngFor="let option of filteredList; let i=index"
+                              class="dropdown-item pointer text-contain"
+                              [ngClass]="{'alternateBackground': i%2 == 0 }" (click)="selectValue(option.name, option.name)">
+                    {{ option.name }}
+                  </mat-option>
+                  <div *ngIf="filteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                </div>
+              </div>
+              <div class="error" *ngIf="isVal1">
+                Please select a Service Category
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Service</label>
+            <div class="col-sm-5">
+              <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="text-truncate">{{ serviceSelectedValue ? serviceSelectedValue : 'Select Service' }}</span>
+                </a>
+                <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                  <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="serviceSearchValue"
+                         (ngModelChange)="serviceFilterDropdown($event)" placeholder="Search">
+                  <mat-option *ngFor="let option of serviceFilteredList; let i=index"
+                              class="dropdown-item pointer text-contain"
+                              [ngClass]="{'alternateBackground': i%2 == 0 }" (click)="serviceSelectValue(option.name, option.code)">
+                    {{ option.name }}
+                  </mat-option>
+                  <div *ngIf="serviceFilteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                </div>
+              </div>
+              <div class="error" *ngIf="isVal2">
+                Please select a Service
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Check In Date</label>
+            <div class="col-sm-5">
+              <input type="date" [(ngModel)]="appointment.checkInDate" class="form-control"
+                     style="background-color: #EEFAFF;" (change)="getEmployeeByDate()" min="{{today | date:'yyyy-MM-dd'}}">
+              <div class="error" *ngIf="isVal3">
+                Please select a Check In Date
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Check In Time</label>
+            <div class="col-sm-5">
+              <input type="time" [(ngModel)]="appointment.checkInTime" class="form-control" placeholder="Check In Time"
+                     style="background-color: #EEFAFF;">
+              <div class="error" *ngIf="isVal4">
+                Please select a Check In Time
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Check Out Date</label>
+            <div class="col-sm-5">
+              <input type="date" [(ngModel)]="appointment.checkOutDate" (change)="getEmployeeByDateRange()" class="form-control"
+                     style="background-color: #EEFAFF;" min="{{today | date:'yyyy-MM-dd'}}">
+              <div class="error" *ngIf="isVal5">
+                Please select a Check Out Date
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Check Out Time</label>
+            <div class="col-sm-5">
+              <input type="time" [(ngModel)]="appointment.checkOutTime" class="form-control" placeholder="Check Out Time"
+                     style="background-color: #EEFAFF;">
+              <div class="error" *ngIf="isVal6">
+                Please select a Check Out Time
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="showRoom">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Find Room</label>
+            <div class="col-sm-5">
+              <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="text-truncate">{{ roomSelectedValue ? roomSelectedValue : 'Select Room' }}</span>
+                </a>
+                <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                  <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="roomSearchValue"
+                         (ngModelChange)="roomFilterDropdown($event)" placeholder="Search">
+                  <mat-option *ngFor="let option of roomFilteredList; let i=index"
+                              class="dropdown-item pointer text-contain"
+                              [ngClass]="{'alternateBackground': i%2 == 0 }" (click)="roomSelectValue(option.name)">
+                    {{ option.name }}
+                  </mat-option>
+                  <div *ngIf="roomFilteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                </div>
+              </div>
+              <div class="error" *ngIf="isVal7">
+                Please select a valid Room
+              </div>
+            </div>
+          </div>
+          <div class="form-group row" *ngIf="showEmp">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Select Employee</label>
+            <div class="col-sm-5">
+              <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="text-truncate">{{ employeeSelectedValue ? employeeSelectedValue : 'Select Employee' }}</span>
+                </a>
+                <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                  <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="employeeSearchValue"
+                         (ngModelChange)="employeeFilterDropdown($event)" placeholder="Search">
+                  <mat-option *ngFor="let option of employeeFilteredList; let i=index"
+                              class="dropdown-item pointer text-contain"
+                              [ngClass]="{'alternateBackground': i%2 == 0 }" (click)="employeeSelectValue(option.name)">
+                    {{ option.name }}
+                  </mat-option>
+                  <div *ngIf="employeeFilteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                </div>
+              </div>
+              <div class="error" *ngIf="isVal8">
+                Please select an Employee
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-9">
+                </div>
+                <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="createAppointment()">
+                    <b>Book Appointment</b>
+                  </button>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-9">
+                </div>
+                <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                          (click)="changeTab(1)">
+                    <b>Home</b>
+                  </button>
+                </div>
+               <!-- <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                          (click)="changeTab(3)">
+                    <b>Next</b>
+                  </button>
+                </div>-->
+                <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                          (click)="changeTab(1)">
+                    <b>Back</b>
+                  </button>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="row" *ngIf="pageView == 3">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Invoice</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <div align="right">
+          <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+            <b>Download PDF</b>
+          </button>
+        </div>
+        <form>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+              <br/>
+              <br/>
+
+            </div>
+          </div>
+          <br/>
+          <div class="form-group row">
+            <div class="col-sm-10">
+
+            </div>
+          </div>
+          <!--<table class="table table-bordered">
+            <thead>
+            </thead>
+            <tbody>
+            <tr>
+              <td>Service</td>
+              <td>{{serviceName}}</td>
+            </tr>
+            <tr>
+              <td>Dates</td>
+              <td>{{dates}}</td>
+            </tr>
+            <tr>
+              <td>Price(No. of Pets * No. of Days * Price)</td>
+              <td>{{noOfPets}} * {{noOfDays}} * {{price}}</td>
+            </tr>
+            <tr>
+              <td>Total(Rs.)</td>
+              <td>{{total}}</td>
+            </tr>
+            </tbody>
+          </table>-->
+          <table class="table table-striped">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+            <th>Date</th>
+            <th>Service</th>
+            <th>Price(No. of Pets * No. of Days * Price)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>{{dates}}</td>
+              <td>{{serviceName}}</td>
+              <td>{{noOfPets}} * {{noOfDays}} * {{price}}</td>
+            </tr>
+            <tr>
+              <td colspan="2">Total(Rs.)</td>
+              <td align="right">{{total}}</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-toggle="modal"
+                          data-target="#myModal1">
+                    <b>Cash</b>
+                  </button>
+                </div>
+                <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="savePayment('Pay at Pick up')">
+                    <b>Pay at Pick up</b>
+                  </button>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+              <br/>
+            </div>
+            <br/>
+
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                          data-target="#myModal1" (click)="changeTab(1)">
+                    <b>Home</b>
+                  </button>
+                </div>
+                <div class="col-md-1">
+                  <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                          (click)="changeTab(2)">
+                    <b>Back</b>
+                  </button>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+              <br/>
+            </div>
+            <br/>
+
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Cash Payment</b></h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Amount</label>
+            <div class="col-sm-10">
+              <input type="text" [(ngModel)]="total" class="form-control" id="inputEmail3" placeholder="Amount"
+                     style="background-color: #EEFAFF;" readonly>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" (click)="savePayment('Cash')" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Pay</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

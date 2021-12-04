@@ -1,0 +1,62 @@
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div fxLayout="column" fxFlexFill fxLayoutAlign="center center" style="background-image:url('../../../assets/canva-photo-editor.png');
+height: 100%;
+background-repeat: no-repeat;
+background-position: center;
+background-size: cover; ">
+<div>
+  <img src="../../../assets/logo.png" id="logoimage">
+</div>
+  <div>
+  <font size="40" color="#fcbe00" style = "font-family:cambria">
+    PawIn
+  </font>
+</div>
+  <br/>
+
+    <div fxLayout="column" >
+
+        <div class=" mat-elevation-z4">
+            <mat-card>
+                <mat-card-title>User Login
+                    <a class="redirect" [routerLink]="['/register']">Register an account</a>
+                </mat-card-title>
+                <mat-card-content>
+                    <form fxLayout="column" fxLayoutAlign="start stretch" [formGroup]="userForm" (ngSubmit)="login()">
+                        <mat-form-field class="full-width">
+                          <input type="email" id="email" class="input" placeholder="Username"
+                                 formControlName="email" required matInput autocomplete="false">
+                        </mat-form-field>
+                        <div *ngIf="formErrors.email" class="help is-danger">
+                            {{ formErrors.email }}
+                        </div>
+                        <mat-form-field class="full-width">
+                            <input type="password" id="password" class="input" placeholder="Password"
+                            formControlName="password" required matInput>
+                        </mat-form-field>
+                        <div *ngIf="formErrors.password" class="help is-danger">
+                            {{ formErrors.password }}
+                        </div>
+                        <button mat-raised-button color="primary" type="submit"  (click)="login()">
+                          <font color="white" style="font-family:cambria">
+                          <b>Login</b>
+                          </font>
+                        </button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+
+</div>
+
+<div style="position: fixed; bottom: 0; width: 100%" align="center">
+  <footer style="background-color: #524f46;">
+    <font color="white" style="font-family:cambria">
+      Copyright © 2021 - PawIn (Pet Kennel & Management Software), Sri Lanka. All Rights Reserved<br/>
+      Developed by Nethmini
+    </font>
+  </footer>
+</div>
+

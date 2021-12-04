@@ -1,0 +1,116 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Pet Live Board</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+              <br/>
+              <br/>
+            </div>
+          </div>
+          <br/>
+          <div class="form-group row">
+            <div class="col-sm-10">
+
+              <mat-button-toggle-group>
+                <mat-button-toggle value="All" (click)="getAppointmentByService('All')" [checked]="true">
+                  <div style="font-family: Cambria;">
+                    All
+                  </div>
+                </mat-button-toggle>
+                <mat-button-toggle value="Daycare" (click)="getAppointmentByService('Daycare')">
+                  <div style="font-family: Cambria;">
+                    Daycare
+                  </div>
+                </mat-button-toggle>
+                <mat-button-toggle value="Boarding" (click)="getAppointmentByService('Boarding')">
+                  <div style="font-family: Cambria;">
+                    Boarding
+                  </div>
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12" align="center">
+              <table id="pets" class="table table-bordered">
+                <tr *ngFor="let service of list">
+                  <td align="center">
+                    <br/>
+                    <div class="card" style="width: 18rem;">
+                      <img src="{{imgURL}}{{service.petCode}}.jpg" height="100px" width="100px" alt="Card image cap"/>
+                      <div class="card-body">
+                        <h5 class="card-title">{{service.petName}}</h5>
+                        <p class="card-text">{{service.serviceName}}</p>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Retail</b></h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Retail Name"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Max Count"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+              <b>Add</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

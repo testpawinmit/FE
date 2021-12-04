@@ -1,0 +1,542 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div *ngIf="userRole == 'USROLE-2'">
+<div class="container">
+  <ul class="nav nav-tabs">
+    <li class="{{tabClass1}}"><a (click)="changeTab(1)" style="font-family:cambria;">Add Products</a></li>
+    <li class="{{tabClass2}}" *ngIf="viewTab"><a (click)="changeTab(2)" style="font-family:cambria;">Add Stock</a></li>
+  </ul>
+</div>
+
+<br/>
+
+<div class="row" *ngIf="tabButton1">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Add Products</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-1">
+                <br/>
+                <br/>
+              </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-10">
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Category</label>
+                      <div class="col-sm-4">
+                        <div class="dropdown h-100" class="statusDropdownContainer button"
+                             style="background-color: #EEFAFF;">
+                          <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                             role="button"
+                             id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-truncate">{{ retailCategorySelectedValue ? retailCategorySelectedValue : 'Select Retail Category' }}</span>
+                          </a>
+                          <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                            <input type="text" class="w-100 p-2 searchInput form-control"
+                                   [ngModel]="retailCategorySearchValue"
+                                   (ngModelChange)="retailCategoryFilterDropdown($event)" placeholder="Search">
+                            <mat-option *ngFor="let option of retailCategoryFilteredList; let i=index"
+                                        class="dropdown-item pointer text-contain"
+                                        [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                        (click)="retailCategorySelectValue(option.name)">
+                              {{ option.name }}
+                            </mat-option>
+                            <div *ngIf="retailCategoryFilteredList.length <=0" class="text-center text-muted mt-1">No
+                              item found
+                            </div>
+                          </div>
+                        </div>
+                        <div class="error" *ngIf="isVal1" align="left">
+                          Please select a valid Retail Category
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+                      <div class="col-sm-10">
+                        <input type="text" [(ngModel)]="retail.retailName" class="form-control" id="inputEmail3"
+                               placeholder="Retail Name"
+                               style="background-color: #EEFAFF;">
+                        <div class="error" *ngIf="isVal2" align="left">
+                          Please select a valid Retail Name
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Price</label>
+                      <div class="col-sm-10">
+                        <input type="number" [(ngModel)]="retail.retailPrice" class="form-control" id="inputEmail3"
+                               placeholder="Retail Price"
+                               style="background-color: #EEFAFF;">
+                        <div class="error" *ngIf="isVal3" align="left">
+                          Please select a valid Retail Price
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Image</label>
+                      <div class="col-sm-10" align="left">
+                        <div *ngIf="currentFile" class="progress">
+                          <div
+                            class="progress-bar progress-bar-info progress-bar-striped"
+                            role="progressbar"
+                            attr.aria-valuenow="{{ progress }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            [ngStyle]="{ width: progress + '%' }"
+                          >
+                            {{ progress }}%
+                          </div>
+                        </div>
+
+                        <label class="btn btn-default">
+                          <input type="file" (change)="selectFile($event)"/>
+                        </label>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            (click)="createRetail()">
+                      <b>Add</b>
+                    </button>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            data-dismiss="modal">
+                      <b>Cancel</b>
+                    </button>
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>
+            <table class="table table-bordered">
+              <thead>
+              <tr style="background-color: #38998C; color: white;">
+                <th>Retail Category</th>
+                <th>Retail Name</th>
+                <th>Image</th>
+                <th>Retail Price</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let retail of itemRetail">
+                <td>
+                  <div *ngIf="showEdit != retail.code">
+                    {{retail.category}}
+                  </div>
+                  <div *ngIf="showEdit == retail.code">
+                    <select class="form-control" id="category_{{retail.code}}">
+                      <option *ngFor="let rc of retailCategoryFilteredList" value="{{rc.name}}">{{rc.name}}</option>
+                    </select>
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="showEdit != retail.code">
+                    {{retail.name}}
+                  </div>
+                  <div *ngIf="showEdit == retail.code">
+                    <input id="name_{{retail.code}}" class="form-control" value="{{retail.name}}">
+                  </div>
+                </td>
+                <td>
+                  <img src="{{imgURL}}{{retail.code}}.jpg" height="100px" width="100px">
+                </td>
+                <td>
+                  <div *ngIf="showEdit != retail.code">
+                    {{retail.price}}
+                  </div>
+                  <div *ngIf="showEdit == retail.code">
+                    <input id="price_{{retail.code}}" class="form-control" value="{{retail.price}}">
+                  </div>
+                </td>
+                <td>
+                  <button class="btn btn-link" (click)="viewShowEdit(retail.code)">
+                    <mat-icon>create</mat-icon>
+                  </button>
+                  <div *ngIf="showEdit == retail.code">
+                    <button class="btn btn-link" (click)="updateSupplier(retail.code)">
+                      <mat-icon>done</mat-icon>
+                    </button>
+                  </div>
+                  <button class="btn btn-link">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-10">
+                  </div>
+                  <div class="col-md-1">
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+<div class="row" *ngIf="tabButton2">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Add Stock</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-1">
+                <br/>
+                <br/>
+              </div>
+            </div>
+            <br/>
+            <!--<div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-10">
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+                      <div class="col-sm-4">
+                        <div class="dropdown h-100" class="statusDropdownContainer button"
+                             style="background-color: #EEFAFF;">
+                          <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                             role="button"
+                             id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-truncate">{{ itemRetailSelectedValue ? itemRetailSelectedValue : 'Select Retail Name' }}</span>
+                          </a>
+                          <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                            <input type="text" class="w-100 p-2 searchInput form-control"
+                                   [ngModel]="itemRetailSearchValue"
+                                   (ngModelChange)="retailCategoryFilterDropdown($event)" placeholder="Search">
+                            <mat-option *ngFor="let option of itemRetailFilteredList; let i=index"
+                                        class="dropdown-item pointer text-contain"
+                                        [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                        (click)="retailItemSelectValue(option.code, option.name)">
+                              {{ option.name }}
+                            </mat-option>
+                            <div *ngIf="itemRetailFilteredList.length <=0" class="text-center text-muted mt-1">No item
+                              found
+                            </div>
+                          </div>
+                        </div>
+                        <div class="error" *ngIf="isVal4" align="left">
+                          Please select a valid Retail Name
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Whole Sale Price</label>
+                      <div class="col-sm-10">
+                        <input type="number" [(ngModel)]="supplierRetail.wholeSalePrice" class="form-control"
+                               id="inputEmail3" placeholder="Whole Sale Price"
+                               style="background-color: #EEFAFF;">
+                        <div class="error" *ngIf="isVal5" align="left">
+                          Please select a valid Whole Sale Price
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+                      <div class="col-sm-10">
+                        <input type="number" [(ngModel)]="supplierRetail.maxCount" class="form-control" id="inputEmail3"
+                               placeholder="Max Count"
+                               style="background-color: #EEFAFF;">
+                        <div class="error" *ngIf="isVal6" align="left">
+                          Please select a valid Max Count
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            (click)="createStock()">
+                      <b>Add</b>
+                    </button>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            data-dismiss="modal">
+                      <b>Cancel</b>
+                    </button>
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>-->
+            <table class="table table-bordered">
+              <thead>
+              <tr style="background-color: #38998C; color: white;">
+                <th>Supplier</th>
+                <th>Retail Name</th>
+                <th>Whole Sale Price</th>
+                <th>Max Count</th>
+                <th>Approve</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let stock of stocks">
+                <td>
+                  {{stock.supName}}
+                </td>
+                <td>
+                  <div *ngIf="showEdit != stock.code">
+                    {{stock.name}}
+                  </div>
+                  <div *ngIf="showEdit == stock.code">
+                    <input class="form-control" value="{{stock.name}}">
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="showEdit != stock.code">
+                    {{stock.price}}
+                  </div>
+                  <div *ngIf="showEdit == stock.code">
+                    <input class="form-control" value="{{stock.price}}">
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="showEdit != stock.code">
+                    {{stock.count}}
+                  </div>
+                  <div *ngIf="showEdit == stock.code">
+                    <input class="form-control" value="{{stock.count}}">
+                  </div>
+                </td>
+                <td>
+                  <mat-slide-toggle [checked]="true"></mat-slide-toggle>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-10">
+                  </div>
+                  <div class="col-md-1">
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Retail</b></h5>
+        </div>
+        <div class="modal-body">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div *ngIf="userRole == 'USROLE-4'">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Add Stock</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-1">
+                <br/>
+                <br/>
+              </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-10">
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+                      <div class="col-sm-4">
+                        <div class="dropdown h-100" class="statusDropdownContainer button"
+                             style="background-color: #EEFAFF;">
+                          <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                             role="button"
+                             id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-truncate">{{ itemRetailSelectedValue ? itemRetailSelectedValue : 'Select Retail Name' }}</span>
+                          </a>
+                          <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                            <input type="text" class="w-100 p-2 searchInput form-control"
+                                   [ngModel]="itemRetailSearchValue"
+                                   (ngModelChange)="retailCategoryFilterDropdown($event)" placeholder="Search">
+                            <mat-option *ngFor="let option of itemRetailFilteredList; let i=index"
+                                        class="dropdown-item pointer text-contain"
+                                        [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                        (click)="retailItemSelectValue(option.code, option.name)">
+                              {{ option.name }}
+                            </mat-option>
+                            <div *ngIf="itemRetailFilteredList.length <=0" class="text-center text-muted mt-1">No item
+                              found
+                            </div>
+                          </div>
+                        </div>
+                        <div class="error" *ngIf="isVal4" align="left">
+                          Please select a valid Retail Name
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Whole Sale Price</label>
+                      <div class="col-sm-10">
+                        <input type="number" [(ngModel)]="supplierRetail.wholeSalePrice" class="form-control"
+                               id="inputEmail3" placeholder="Whole Sale Price"
+                               style="background-color: #EEFAFF;">
+                        <div class="error" *ngIf="isVal5" align="left">
+                          Please select a valid Whole Sale Price
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+                      <div class="col-sm-10">
+                        <input type="number" [(ngModel)]="supplierRetail.maxCount" class="form-control" id="inputEmail3"
+                               placeholder="Max Count"
+                               style="background-color: #EEFAFF;">
+                        <div class="error" *ngIf="isVal6" align="left">
+                          Please select a valid Max Count
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            (click)="createStock()">
+                      <b>Add</b>
+                    </button>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            data-dismiss="modal">
+                      <b>Cancel</b>
+                    </button>
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>
+            <table class="table table-bordered">
+              <thead>
+              <tr style="background-color: #38998C; color: white;">
+                <th>Retail Name</th>
+                <th>Whole Sale Price</th>
+                <th>Max Count</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let stock of stocks">
+                <td>
+                  <div *ngIf="showEdit != stock.code">
+                    {{stock.name}}
+                  </div>
+                  <div *ngIf="showEdit == stock.code">
+                    <input class="form-control" value="{{stock.name}}">
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="showEdit != stock.code">
+                    {{stock.price}}
+                  </div>
+                  <div *ngIf="showEdit == stock.code">
+                    <input class="form-control" value="{{stock.price}}">
+                  </div>
+                </td>
+                <td>
+                  <div *ngIf="showEdit != stock.code">
+                    {{stock.count}}
+                  </div>
+                  <div *ngIf="showEdit == stock.code">
+                    <input class="form-control" value="{{stock.count}}">
+                  </div>
+                </td>
+                <td>
+                  <button class="btn btn-link" (click)="viewShowEdit(stock.code)">
+                    <mat-icon>create</mat-icon>
+                  </button>
+                  <button class="btn btn-link">
+                    <mat-icon>done</mat-icon>
+                  </button>
+                  <button class="btn btn-link">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-10">
+                  </div>
+                  <div class="col-md-1">
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

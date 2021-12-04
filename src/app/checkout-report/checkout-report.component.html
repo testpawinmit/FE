@@ -1,0 +1,147 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Check Out Report</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+              <br/>
+              <br/>
+            </div>
+          </div>
+          <br/>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Select Date From</label>
+            <div class="col-sm-5">
+              <input [(ngModel)] = "startDate" type="date" class="form-control" style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Select Date To</label>
+            <div class="col-sm-5">
+              <input [(ngModel)] = "endDate" type="date" class="form-control" style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-7" align="right">
+              <button type="submit" (click)="getCheckOutReport()" class="btn btn-primary" style="background-color: #38998C;">
+                <b>Search</b>
+              </button>
+            </div>
+          </div>
+          <table class="table table-bordered" id="excel-table">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Service</th>
+              <th>Pet Name</th>
+              <th>Owner Name</th>
+              <th>Breed</th>
+              <th>Assigned Resource</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let chek of fullCheckOutReport">
+              <td>{{chek.serviceName}}</td>
+              <td>{{chek.petName}}</td>
+              <td>{{chek.ownerName}}</td>
+              <td>{{chek.breedName}}</td>
+              <td>{{chek.roomName}}</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                  <button mat-raised-button (click)="exportexcel()" type="submit" class="btn btn-primary" style="background-color: #38998C;">
+                    <b>Download Report</b>
+                  </button>
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Retail</b></h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Retail Name"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Max Count"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+              <b>Add</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

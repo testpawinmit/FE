@@ -1,0 +1,431 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Employee Schedule</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+              <br/>
+              <br/>
+            </div>
+          </div>
+          <br/>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Search Employee</label>
+            <div class="col-sm-10">
+              <input type="text" [(ngModel)]="empName" class="form-control" id="inputEmail3"
+                     placeholder="Search Employee"
+                     style="background-color: #EEFAFF;">
+              <div class="error" *ngIf="isVal1" align="left">
+                Please enter a valid Employee Name
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12" align="right">
+              <button type="submit" (click)="searchEmployee()" class="btn btn-primary"
+                      style="background-color: #38998C;" data-toggle="modal">
+                <b>Search</b>
+              </button>
+            </div>
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+          <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Employee Number</th>
+              <th>Employee Name</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let emp of empList">
+              <td>{{emp.empNo}}</td>
+              <td>{{emp.empName}}</td>
+              <td>
+                <div class="row">
+                  <div class="col-md-2">
+                    <button type="submit" (click)="getEmpCode(emp.empCode)" class="btn btn-primary"
+                            style="background-color: #38998C;" data-toggle="modal"
+                            data-target="#myModal1">
+                      <b>Select</b>
+                    </button>
+                  </div>
+                  <div class="col-md-1">
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div align="center" *ngIf="showErr">
+            <font color="red">
+              Please select valid Start Time and End Time...
+            </font>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <table class="table table-bordered">
+                  <thead>
+                  <tr style="background-color: #38998C; color: white;">
+                    <th>Day</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let schedule of scheduleRecord">
+                    <td>
+                      {{schedule.day}}
+                    </td>
+                    <td>
+                      <div *ngIf="showEdit != schedule.empScheduleId">
+                        {{schedule.startTime}}
+                      </div>
+                      <div *ngIf="showEdit == schedule.empScheduleId">
+                        <input type="time" id="startTime_{{schedule.empScheduleId}}" class="form-control" value="{{schedule.startTime}}">
+                      </div>
+                    </td>
+                    <td>
+                      <div *ngIf="showEdit != schedule.empScheduleId">
+                        {{schedule.endTime}}
+                      </div>
+                      <div *ngIf="showEdit == schedule.empScheduleId">
+                        <input type="time" id="endTime_{{schedule.empScheduleId}}" class="form-control" value="{{schedule.endTime}}">
+                      </div>
+                    </td>
+                    <td>
+                      <button class="btn btn-link" (click)="viewShowEdit(schedule.empScheduleId)">
+                        <mat-icon>create</mat-icon>
+                      </button>
+                      <div *ngIf="showEdit == schedule.empScheduleId">
+                        <button class="btn btn-link" (click)="updateEmployeeSchedule(schedule.empScheduleId)">
+                          <mat-icon>done</mat-icon>
+                        </button>
+                      </div>
+                      <button class="btn btn-link">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Schedule</b></h5>
+        </div>
+        <div class="modal-body">
+          <div id="myId">
+            <div class="form-group row">
+
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Sunday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isSunday"
+                                (change)="selectDay('SUNDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="sundayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.sunStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.sunEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Monday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isMonday"
+                                (change)="selectDay('MONDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="mondayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.monStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.monEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Tuesday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isTuesday"
+                                (change)="selectDay('TUESDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="tuesdayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.tueStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.tueEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Wednesday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isWednesday"
+                                (change)="selectDay('WEDNESDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="wednesdayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.wedStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.wedEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Thursday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isThursday"
+                                (change)="selectDay('THURSDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="thursdayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.thuStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.thuEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Friday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isFriday"
+                                (change)="selectDay('FRIDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="fridayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.friStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.friEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <div class="row">
+                <div class="col-md-3">
+                  <label for="inputEmail3" class="col-sm-2 col-form-label">Saturday</label>
+                </div>
+                <div class="col-md-1" align="right">
+                  <mat-checkbox class="example-margin" [(ngModel)]="employeeSchedule.isSaturday"
+                                (change)="selectDay('SATURDAY')"></mat-checkbox>
+                </div>
+              </div>
+              <div *ngIf="saturdayDiv">
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    Start Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.satStartTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-4" align="center">
+                    End Time
+                  </div>
+                  <div class="col-md-4">
+                    <input type="time" [(ngModel)]="employeeSchedule.satEndTime" class="form-control" id="inputEmail3"
+                           placeholder="Start Time"
+                           style="background-color: #EEFAFF;">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <div class="row">
+                  <div class="col-md-10" align="right">
+                    <button type="submit" (click)="addEmployeeSchedule(employeeSchedule)" class="btn btn-primary"
+                            style="background-color: #38998C;" data-dismiss="modal">
+                      <b>Add</b>
+                    </button>
+                  </div>
+                  <div class="col-md-2" align="right">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            data-dismiss="modal">
+                      <b>Cancel</b>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <br/>
+  <br/>
+  <br/>
+  <br/>

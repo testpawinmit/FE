@@ -1,0 +1,256 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Add Service Dogs</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row>">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+              <table border="0" width="100%">
+                <tr class="trHeight">
+                  <td style="width: 150px;">
+                    <label for="inputEmail3" class="col-form-label">Dog Name</label>
+                  </td>
+                  <td>
+                    <input type="text" [(ngModel)]="serviceDog.serviceDogName" class="form-control" id="inputEmail3"
+                           placeholder="Dog Name"
+                           style="background-color: #EEFAFF;">
+                    <div class="error" *ngIf="isVal1" align="left">
+                      Please enter a valid Service Dog Name
+                    </div>
+                  </td>
+                </tr>
+                <tr class="trHeight">
+                  <td>
+                    <label for="inputEmail3" class="col-form-label">Birth Date</label>
+                  </td>
+                  <td>
+                    <input type="date" [(ngModel)]="serviceDog.serviceDogDob" class="form-control"
+                           style="background-color: #EEFAFF;" max="{{today | date:'yyyy-MM-dd'}}">
+                    <div class="error" *ngIf="isVal2" align="left">
+                      Please select a valid Date
+                    </div>
+                  </td>
+                </tr>
+                <tr class="trHeight">
+                  <td>
+                    <label for="inputEmail3" class="col-form-label">Breed</label>
+                  </td>
+                  <td>
+                    <div class="dropdown h-100" class="statusDropdownContainer button"
+                         style="background-color: #EEFAFF;">
+                      <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                         role="button"
+                         id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="text-truncate">{{ breedSelectedValueName ? breedSelectedValueName : 'Select Breed' }}</span>
+                      </a>
+                      <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                        <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="breedSearchValue"
+                               (ngModelChange)="breedFilterDropdown($event)" placeholder="Search">
+                        <mat-option *ngFor="let option of breedFilteredList; let i=index"
+                                    class="dropdown-item pointer text-contain"
+                                    [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                    (click)="breedSelectValue(option.code, option.name)">
+                          {{ option.name }}
+                        </mat-option>
+                        <div *ngIf="breedFilteredList.length <=0" class="text-center text-muted mt-1">No item found
+                        </div>
+                      </div>
+                    </div>
+                    <div class="error" *ngIf="isVal3" align="left">
+                      Please select a valid Breed
+                    </div>
+                  </td>
+                </tr>
+                <tr class="trHeight">
+                  <td>
+                    <label for="inputEmail3" class="col-form-label">Color</label>
+                  </td>
+                  <td>
+                    <div class="dropdown h-100" class="statusDropdownContainer button"
+                         style="background-color: #EEFAFF;">
+                      <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                         role="button"
+                         id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="text-truncate">{{ colorSelectedValueName ? colorSelectedValueName : 'Select Color' }}</span>
+                      </a>
+                      <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                        <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="colorSearchValue"
+                               (ngModelChange)="colorFilterDropdown($event)" placeholder="Search">
+                        <mat-option *ngFor="let option of colorFilteredList; let i=index"
+                                    class="dropdown-item pointer text-contain"
+                                    [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                    (click)="colorSelectValue(option.code, option.name)">
+                          {{ option.name }}
+                        </mat-option>
+                        <div *ngIf="colorFilteredList.length <=0" class="text-center text-muted mt-1">No item found
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="trHeight">
+                  <td>
+                    <label for="inputEmail3" class="col-form-label">History of Notes</label>
+                  </td>
+                  <td>
+                    <input type="text" [(ngModel)]="serviceDog.note" class="form-control" id="inputEmail3"
+                           placeholder="History of Notes"
+                           style="background-color: #EEFAFF;">
+                  </td>
+                </tr>
+                <tr class="trHeight">
+                  <td></td>
+                  <td align="right">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            (click)="createServiceDogs()">
+                      <b>Save</b>
+                    </button>
+                    &nbsp;
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+                      <b>Cancel</b>
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+
+          <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Dog Name</th>
+              <th>Birth Date</th>
+              <th>Breed</th>
+              <th>Color</th>
+              <th>History of Notes</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let serviceDog of serviceDogs">
+              <td>
+                <div *ngIf="showEdit != serviceDog.code">
+                  {{serviceDog.serviceDogName}}
+                </div>
+                <div *ngIf="showEdit == serviceDog.code">
+                  <input class="form-control" id="serviceDogName_{{serviceDog.code}}" value="{{serviceDog.serviceDogName}}">
+                </div>
+              </td>
+              <td>
+                <div *ngIf="showEdit != serviceDog.code">
+                  {{serviceDog.serviceDogDob}}
+                </div>
+                <div *ngIf="showEdit == serviceDog.code">
+                  <input type="date" class="form-control" id="serviceDogDob_{{serviceDog.code}}" value="{{serviceDog.serviceDogDob}}">
+                </div>
+              </td>
+              <td>
+                <div *ngIf="showEdit != serviceDog.code">
+                  {{serviceDog.breed}}
+                </div>
+                <div *ngIf="showEdit == serviceDog.code">
+                  <select class="form-control" id="breed_{{serviceDog.code}}">
+                    <option *ngFor="let br of breedFilteredList" value="{{br.code}}">{{br.name}}</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <div *ngIf="showEdit != serviceDog.code">
+                  {{serviceDog.color}}
+                </div>
+                <div *ngIf="showEdit == serviceDog.code">
+                  <select class="form-control" id="color_{{serviceDog.code}}">
+                    <option *ngFor="let cl of colorFilteredList" value="{{cl.code}}">{{cl.name}}</option>
+                  </select>
+                </div>
+              </td>
+              <td>
+                <div *ngIf="showEdit != serviceDog.code">
+                  {{serviceDog.note}}
+                </div>
+                <div *ngIf="showEdit == serviceDog.code">
+                  <input class="form-control" id="note_{{serviceDog.code}}" value="{{serviceDog.note}}">
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-link" (click)="viewShowEdit(serviceDog.code)">
+                  <mat-icon>create</mat-icon>
+                </button>
+                <div *ngIf="showEdit == serviceDog.code">
+                  <button class="btn btn-link"
+                          (click)="updateServiceDog(serviceDog.code)">
+                    <mat-icon>done</mat-icon>
+                  </button>
+                </div>
+                <button class="btn btn-link">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Retail</b></h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Retail Name"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Max Count"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+              <b>Add</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>

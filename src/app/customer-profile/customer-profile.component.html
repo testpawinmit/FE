@@ -1,0 +1,1266 @@
+<br/>
+
+<div *ngIf="userRole == 'USROLE-3'">
+  <div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+  <div class="container">
+    <ul class="nav nav-tabs">
+      <li class="{{tabClass1}}"><a (click)="changeTab(1)" style="font-family:cambria;">Profile</a></li>
+      <li class="{{tabClass5}}" *ngIf="viewTab"><a (click)="changeTab(5)" style="font-family:cambria;">View</a></li>
+      <li class="{{tabClass2}}" *ngIf="viewTab"><a (click)="changeTab(2)" style="font-family:cambria;" *ngIf="isMed">Medication</a>
+      </li>
+      <li class="{{tabClass3}}" *ngIf="viewTab"><a (click)="changeTab(3)" style="font-family:cambria;" *ngIf="isDie">Dietary</a>
+      </li>
+      <li class="{{tabClass4}}" *ngIf="viewTab"><a (click)="changeTab(4)" style="font-family:cambria;" *ngIf="isVac">Vaccination</a>
+      </li>
+    </ul>
+  </div>
+
+  <br/>
+
+  <div class="row" *ngIf="tabButton1">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Profile</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <br/>
+            <div class="row">
+              <div class="col-md-2">
+                <label for="inputEmail3" class="col-form-label">Profile Image</label>
+              </div>
+              <div class="col-md-10">
+                <div *ngIf="currentFile" class="progress">
+                  <div
+                    class="progress-bar progress-bar-info progress-bar-striped"
+                    role="progressbar"
+                    attr.aria-valuenow="{{ progress }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [ngStyle]="{ width: progress + '%' }"
+                  >
+                    {{ progress }}%
+                  </div>
+                </div>
+
+                <label class="btn btn-default">
+                  <input type="file" (change)="selectFile($event)"/>
+                </label>
+
+              </div>
+            </div>
+
+            <br/>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">First Name</label>
+              <div class="col-sm-10">
+                <input type="text" id="custFirstName_{{customer.custCode}}" class="form-control"
+                       placeholder="First Name"
+                       style="background-color: #EEFAFF;" value="{{customer.custFirstName}}">
+                <div *ngIf="isVal1" class="error">Please enter First Name</div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Last Name</label>
+              <div class="col-sm-10">
+                <input type="text" id="custLastName_{{customer.custCode}}" class="form-control" placeholder="Last Name"
+                       style="background-color: #EEFAFF;" value="{{customer.custLastName}}">
+                <div *ngIf="isVal2" class="error">Please enter Last Name</div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+              <div class="col-sm-10">
+                <input type="email" id="custEmail_{{customer.custCode}}" class="form-control" placeholder="Email"
+                       style="background-color: #EEFAFF;" value="{{customer.custEmail}}">
+                <div *ngIf="isVal3" class="error">Please enter a valid Email</div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">NIC</label>
+              <div class="col-sm-10">
+                <input type="text" id="custNic_{{customer.custCode}}" class="form-control" placeholder="NIC"
+                       style="background-color: #EEFAFF;" value="{{customer.custNic}}">
+                <div *ngIf="isVal4" class="error">Please enter a valid NIC</div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Phone Number</label>
+              <div class="col-sm-10">
+                <input type="text" id="custPhone_{{customer.custCode}}" class="form-control" placeholder="Phone Number"
+                       style="background-color: #EEFAFF;" value="{{customer.custPhone}}">
+                <div *ngIf="isVal5" class="error">Please enter a valid Phone Number</div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Address</label>
+              <div class="col-sm-10">
+                <input type="text" id="custAddress_{{customer.custCode}}" class="form-control" placeholder="Address"
+                       style="background-color: #EEFAFF;" value="{{customer.custAddress}}">
+                <div *ngIf="isVal6" class="error">Please enter a valid Address</div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Location</label>
+              <div class="col-sm-4">
+                <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                  <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                     role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="text-truncate">{{ selectedValue ? selectedValue : 'Select Location' }}</span>
+                  </a>
+                  <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                    <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="searchValue"
+                           (ngModelChange)="filterDropdown($event)" placeholder="Search">
+                    <mat-option *ngFor="let option of filteredList; let i=index"
+                                class="dropdown-item pointer text-contain"
+                                [ngClass]="{'alternateBackground': i%2 == 0 }" (click)="selectValue(option.name)">
+                      {{ option.name }}
+                    </mat-option>
+                    <div *ngIf="filteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                  </div>
+                  <div *ngIf="isVal7" class="error">Please enter a valid Location</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-sm-12" align="right">
+                <div class="row">
+                  <div class="col-md-11">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                            (click)="createCustomer()">
+                      <b>Update</b>
+                    </button>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-group row">
+                      <div class="row">
+                        <div class="col-md-11" align="right">
+                          <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                                  data-toggle="modal"
+                                  data-target="#myModal5">
+                            Add Pet
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+
+  <div class="row" *ngIf="tabButton2">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Medication</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-1">
+                <br/>
+                <br/>
+              </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="inputEmail3" class="col-sm-12 col-form-label">Allergies</label>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-toggle="modal"
+                            data-target="#myModal1">
+                      <b>Add</b>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <table class="table table-bordered">
+                <thead>
+                <tr style="background-color: #38998C; color: white;">
+                  <th>Name</th>
+                  <th>Treatment</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let allergy of allergies">
+                  <td>
+                    <div *ngIf="showEdit != allergy.allergyCode">
+                      {{allergy.allergyName}}
+                    </div>
+                    <div *ngIf="showEdit == allergy.allergyCode">
+                      <input id="allergyName_{{allergy.allergyCode}}" class="form-control"
+                             value="{{allergy.allergyName}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != allergy.allergyCode">
+                      {{allergy.allergyTreatment}}
+                    </div>
+                    <div *ngIf="showEdit == allergy.allergyCode">
+                      <input id="allergyTreatment_{{allergy.allergyCode}}" class="form-control"
+                             value="{{allergy.allergyTreatment}}">
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-link" (click)="viewShowEdit(allergy.allergyCode)">
+                      <mat-icon>create</mat-icon>
+                    </button>
+                    <div *ngIf="showEdit == allergy.allergyCode">
+                      <button class="btn btn-link" (click)="updateAllergy(allergy.allergyCode)">
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    </div>
+                    <button class="btn btn-link">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group row">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="inputEmail3" class="col-sm-12 col-form-label">Medical or Physical Disabilities</label>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-toggle="modal"
+                            data-target="#myModal2">
+                      <b>Add</b>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <table class="table table-bordered">
+                <thead>
+                <tr style="background-color: #38998C; color: white;">
+                  <th>Name</th>
+                  <th>Treatment</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let disability of disabilities">
+                  <td>
+                    <div *ngIf="showEdit != disability.disableCode">
+                      {{disability.disableName}}
+                    </div>
+                    <div *ngIf="showEdit == disability.disableCode">
+                      <input id="disableName_{{disability.disableCode}}" class="form-control"
+                             value="{{disability.disableName}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != disability.disableCode">
+                      {{disability.disableTreatment}}
+                    </div>
+                    <div *ngIf="showEdit == disability.disableCode">
+                      <input id="disableTreatment_{{disability.disableCode}}" class="form-control"
+                             value="{{disability.disableTreatment}}">
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-link" (click)="viewShowEdit(disability.disableCode)">
+                      <mat-icon>create</mat-icon>
+                    </button>
+                    <div *ngIf="showEdit == disability.disableCode">
+                      <button class="btn btn-link" (click)="updateDisability(disability.disableCode)">
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    </div>
+                    <button class="btn btn-link">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group row">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="inputEmail3" class="col-sm-12 col-form-label">Injuries</label>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-toggle="modal"
+                            data-target="#myModal3">
+                      <b>Add</b>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <table class="table table-bordered">
+                <thead>
+                <tr style="background-color: #38998C; color: white;">
+                  <th>Description</th>
+                  <th>Occurred</th>
+                  <th>Impact</th>
+                  <th>Until</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let injury of injuries">
+                  <td>
+                    <div *ngIf="showEdit != injury.injuryCode">
+                      {{injury.injuryDes}}
+                    </div>
+                    <div *ngIf="showEdit == injury.injuryCode">
+                      <input id="injuryDes_{{injury.injuryCode}}" class="form-control" value="{{injury.injuryDes}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != injury.injuryCode">
+                      {{injury.injuryOccurred | date:'mediumDate'}}
+                    </div>
+                    <div *ngIf="showEdit == injury.injuryCode">
+                      <input type="date" id="injuryOccurred_{{injury.injuryCode}}" class="form-control"
+                             value="{{injury.injuryOccurred}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != injury.injuryCode">
+                      {{injury.injuryImpact}}
+                    </div>
+                    <div *ngIf="showEdit == injury.injuryCode">
+                      <input id="injuryImpact_{{injury.injuryCode}}" class="form-control"
+                             value="{{injury.injuryImpact}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != injury.injuryCode">
+                      {{injury.injuryUntil | date:'mediumDate'}}
+                    </div>
+                    <div *ngIf="showEdit == injury.injuryCode">
+                      <input type="date" id="injuryUntil_{{injury.injuryCode}}" class="form-control"
+                             value="{{injury.injuryUntil}}">
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-link" (click)="viewShowEdit(injury.injuryCode)">
+                      <mat-icon>create</mat-icon>
+                    </button>
+                    <div *ngIf="showEdit == injury.injuryCode">
+                      <button class="btn btn-link" (click)="updateInjury(injury.injuryCode)">
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    </div>
+                    <button class="btn btn-link">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="form-group row">
+              <div class="row">
+                <div class="col-md-6">
+                  <label for="inputEmail3" class="col-sm-12 col-form-label">Medications</label>
+                </div>
+                <div class="col-md-6">
+                  <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-toggle="modal"
+                            data-target="#myModal4">
+                      <b>Add</b>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <br/>
+              <table class="table table-bordered">
+                <thead>
+                <tr style="background-color: #38998C; color: white;">
+                  <th>Dosage</th>
+                  <th>Name</th>
+                  <th>Frequency</th>
+                  <th>AM</th>
+                  <th>Mid</th>
+                  <th>PM</th>
+                  <th>Until</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let medication of medications">
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medDosage}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <input id="medDosage_{{medication.medCode}}" class="form-control"
+                             value="{{medication.medDosage}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medName}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <input id="medName_{{medication.medCode}}" class="form-control" value="{{medication.medName}}">
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medFrequency}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <select class="form-control" id="medFrequency_{{medication.medCode}}">
+                        <option value="As Needed">As Needed</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medAM}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <select class="form-control" id="medAM_{{medication.medCode}}">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medMid}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <select class="form-control" id="medMid_{{medication.medCode}}">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medPM}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <select class="form-control" id="medPM_{{medication.medCode}}">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                  </td>
+                  <td>
+                    <div *ngIf="showEdit != medication.medCode">
+                      {{medication.medUntil | date:'mediumDate'}}
+                    </div>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <input type="date" id="medUntil_{{medication.medCode}}" class="form-control"
+                             value="{{medication.medUntil}}">
+                    </div>
+                  </td>
+                  <td>
+                    <button class="btn btn-link" (click)="viewShowEdit(medication.medCode)">
+                      <mat-icon>create</mat-icon>
+                    </button>
+                    <div *ngIf="showEdit == medication.medCode">
+                      <button class="btn btn-link" (click)="updateMedication(medication.medCode)">
+                        <mat-icon>done</mat-icon>
+                      </button>
+                    </div>
+                    <button class="btn btn-link">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+
+  <div class="row" *ngIf="tabButton3">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Dietary</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <div id="#section1">
+              <div class="form-group row">
+                <div class="row>">
+                  <div class="col-md-1"></div>
+                  <div class="col-md-10">
+                    <table border="0" width="100%">
+                      <tr class="trHeight">
+                        <td style="width: 150px;">
+                          <label for="inputEmail3" class="col-form-label">Brings own food?</label>
+                        </td>
+                        <td>
+                          <mat-radio-group aria-label="Select an option" [(ngModel)]="dietary.ownFood">
+                            <mat-radio-button value="Yes">
+                              <div style="font-family:cambria">Yes</div>
+                            </mat-radio-button>
+                            <mat-radio-button value="No">
+                              <div style="font-family:cambria">No</div>
+                            </mat-radio-button>
+                          </mat-radio-group>
+                        </td>
+                      </tr>
+                      <tr class="trHeight">
+                        <td>
+                          <label for="inputEmail3" class="col-form-label">Food Type</label>
+                        </td>
+                        <td>
+                          <input type="text" [(ngModel)]="dietary.feedType" class="col-sm-12 form-control"
+                                 placeholder="Food Type"
+                                 style="background-color: #EEFAFF;">
+                        </td>
+                      </tr>
+                      <tr class="trHeight">
+                        <td>
+                          <label for="inputEmail3" class="col-form-label">Feeding Times</label>
+                        </td>
+                        <td>
+                      <tr *ngFor="let subtask of task.subtasks">
+                        <mat-checkbox [(ngModel)]="subtask.completed"
+                                      [color]="subtask.color"
+                                      (ngModelChange)="updateAllComplete(subtask.name)">
+                          {{ subtask.name }}
+                        </mat-checkbox>
+                      </tr>
+                      </td>
+                      </tr>
+                      <tr class="trHeight">
+                        <td>
+                          <label for="inputEmail3" class="col-form-label">Feeding Alone</label>
+                        </td>
+                        <td>
+                          <mat-radio-group aria-label="Select an option" [(ngModel)]="dietary.feedAlone">
+                            <mat-radio-button value="Yes">
+                              <div style="font-family:cambria">Yes</div>
+                            </mat-radio-button>
+                            <mat-radio-button value="No">
+                              <div style="font-family:cambria">No</div>
+                            </mat-radio-button>
+                          </mat-radio-group>
+                        </td>
+                      </tr>
+                      <tr class="trHeight">
+                        <td></td>
+                        <td align="right">
+                          <a href="#section1">
+                            <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                                    (click)="addDietary()" data-dismiss="modal">
+                              <b>Save</b>
+                            </button>
+                          </a>
+                          &nbsp;
+                          <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+                            <b>Cancel</b>
+                          </button>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <div class="col-md-1"></div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+
+  <div class="row" *ngIf="tabButton4">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Vaccination</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <form>
+            <div class="row">
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-1">
+                <br/>
+                <br/>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="row>">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                  <table border="0" width="60%">
+                    <tr class="trHeight">
+                      <td style="width: 20px;">
+                        <label for="inputEmail3" class="col-form-label">Vaccination</label>
+                      </td>
+                      <td style="width: 20px;">
+                        <mat-button-toggle-group [(ngModel)]="vaccName" *ngFor="let vac of vaccineList">
+                          <mat-button-toggle value="{{vac.name}}">
+                            <div style="font-family: Cambria;">
+                              {{vac.name}}
+                            </div>
+                          </mat-button-toggle>
+                        </mat-button-toggle-group>
+                      </td>
+                    </tr>
+                    <tr class="trHeight">
+                      <td>
+                        <label for="inputEmail3" class="col-form-label">Expiration Date</label>
+                      </td>
+                      <td>
+                        <input type="date" [(ngModel)]="expirationDate" class="form-control"
+                               style="background-color: #EEFAFF;" [disabled]="buttonDis"
+                               min="{{today | date:'yyyy-MM-dd'}}">
+                      </td>
+                    </tr>
+                    <tr class="trHeight">
+                      <td></td>
+                      <td align="right">
+                        <button type="submit" class="btn btn-primary" style="background-color: #38998C;"
+                                (click)="addVaccination()" [disabled]="buttonDis">
+                          <b>Save</b>
+                        </button>
+                        &nbsp;
+                        <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+                          <b>Cancel</b>
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+            <br/>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">{{petName}}</label>
+            <table class="table table-bordered">
+              <thead>
+              <tr style="background-color: #38998C; color: white;">
+                <th>Name</th>
+                <th>Expiration Date</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let vaccination of vaccination">
+                <td>
+                  {{vaccination.name}}
+                </td>
+                <td>
+                  <div *ngIf="showEdit != vaccination.code">
+                    {{vaccination.expirationDate}}
+                  </div>
+                  <div *ngIf="showEdit == vaccination.code">
+                    <input type="date" [(ngModel)]="vaccination.expirationDate" class="form-control"
+                           value="{{vaccination.expirationDate}}" min="{{today | date:'yyyy-MM-dd'}}">
+                  </div>
+                </td>
+                <td>
+                  <button class="btn btn-link" (click)="viewShowEdit(vaccination.code)">
+                    <mat-icon>create</mat-icon>
+                  </button>
+                  <div *ngIf="showEdit == vaccination.code">
+                    <button class="btn btn-link"
+                            (click)="updateVaccine(vaccination.code, vaccination.name, vaccination.expirationDate)">
+                      <mat-icon>done</mat-icon>
+                    </button>
+                  </div>
+                  <button class="btn btn-link">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </form>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+
+  <div class="row" *ngIf="tabButton5">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>My Pets</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Name</th>
+              <th>Image</th>
+              <th>Select</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let pet of pets">
+              <td>
+                <div *ngIf="showEdit != pet.petCode">
+                  {{pet.petName}}
+                </div>
+                <div *ngIf="showEdit == pet.petCode">
+                  <input id="petName_{{pet.petCode}}" class="form-control" value="{{pet.petName}}">
+                </div>
+              </td>
+              <td><img src="{{imgURL}}{{pet.petCode}}.jpg" height="100px" width="100px"/></td>
+              <td>
+                <button (click)="goMedication(pet.petCode)" type="submit" class="btn btn-primary"
+                        style="background-color: #38998C;">Add Medication
+                </button>
+                &nbsp;
+                <button (click)="goDietary(pet.petCode)" type="submit" class="btn btn-primary"
+                        style="background-color: #38998C;">Add Dietary
+                </button>
+                &nbsp;
+                <button (click)="goVaccination(pet.petCode)" type="submit" class="btn btn-primary"
+                        style="background-color: #38998C;">Add Vaccination
+                </button>
+              </td>
+              <td>
+                <button class="btn btn-link" (click)="viewShowEdit(pet.petCode)">
+                  <mat-icon>create</mat-icon>
+                </button>
+                <div *ngIf="showEdit == pet.petCode">
+                  <button class="btn btn-link" (click)="updatePet(pet.petCode)">
+                    <mat-icon>done</mat-icon>
+                  </button>
+                </div>
+                <button class="btn btn-link">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+    <div class="col-md-1"></div>
+  </div>
+
+  <div class="container">
+
+    <!-- Modal1 -->
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Allergies</b></h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="allergy.allergyName" class="form-control" placeholder="Name"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Treatment</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="allergy.allergyTreatment" class="form-control" placeholder="Treatment"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="addAllergy()"
+                    data-dismiss="modal">
+              <b>Save</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal2 -->
+    <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLongTitle2"><b>Add Medical or Physical Disabilities</b></h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="medPhysicalDisable.disableName" class="form-control" placeholder="Name"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Treatment</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="medPhysicalDisable.disableTreatment" class="form-control"
+                       placeholder="Treatment"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="addDisable()"
+                    data-dismiss="modal">
+              <b>Save</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal3 -->
+    <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLongTitle3"><b>Add Injuries</b></h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Description</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="injury.injuryDes" class="form-control" placeholder="Description"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Occurred</label>
+              <div class="col-sm-6">
+                <input type="date" [(ngModel)]="injury.injuryOccurred" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Impact</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="injury.injuryImpact" class="form-control" placeholder="Impact"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Until</label>
+              <div class="col-sm-6">
+                <input type="date" [(ngModel)]="injury.injuryUntil" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="addInjury()"
+                    data-dismiss="modal">
+              <b>Save</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal4 -->
+    <div class="modal fade" id="myModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLongTitle4"><b>Add Medications</b></h5>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Dosage</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="medication.medDosage" class="form-control" placeholder="Dosage"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="medication.medName" class="form-control" id="inputEmail3"
+                       placeholder="Name"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Frequency</label>
+              <div class="col-sm-10">
+
+                <mat-button-toggle-group [(ngModel)]="medication.medFrequency">
+                  <mat-button-toggle value="As Needed">
+                    <div style="font-family: Cambria;">
+                      As Needed
+                    </div>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="Daily">
+                    <div style="font-family: Cambria;">
+                      Daily
+                    </div>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="Weekly">
+                    <div style="font-family: Cambria;">
+                      Weekly
+                    </div>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+
+                <!--              <div [(ngModel)]="medication.medFrequency" class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-secondary active">
+                                  <input type="radio" value="As Needed" name="options" autocomplete="off" checked> As Needed
+                                </label>
+                                <label class="btn btn-secondary">
+                                  <input type="radio" value="Daily" name="options" autocomplete="off"> Daily
+                                </label>
+                                <label class="btn btn-secondary">
+                                  <input type="radio" value="Weekly" name="options" autocomplete="off"> Weekly
+                                </label>
+                              </div>-->
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">AM</label>
+              <div class="col-sm-10">
+                <mat-button-toggle-group [(ngModel)]="medication.medAM">
+                  <mat-button-toggle value="Yes">
+                    <div style="font-family: Cambria;">
+                      Yes
+                    </div>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="No">
+                    <div style="font-family: Cambria;">
+                      No
+                    </div>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Mid</label>
+              <div class="col-sm-10">
+                <mat-button-toggle-group [(ngModel)]="medication.medMid">
+                  <mat-button-toggle value="Yes">
+                    <div style="font-family: Cambria;">
+                      Yes
+                    </div>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="No">
+                    <div style="font-family: Cambria;">
+                      No
+                    </div>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">PM</label>
+              <div class="col-sm-6">
+                <mat-button-toggle-group [(ngModel)]="medication.medPM">
+                  <mat-button-toggle value="Yes">
+                    <div style="font-family: Cambria;">
+                      Yes
+                    </div>
+                  </mat-button-toggle>
+                  <mat-button-toggle value="No">
+                    <div style="font-family: Cambria;">
+                      No
+                    </div>
+                  </mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">
+                Until
+              </label>
+              <div class="col-sm-6">
+                <input type="date" [(ngModel)]="medication.medUntil" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="addMedication()"
+                    data-dismiss="modal">
+              <b>Save</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal5 -->
+    <div class="modal fade" id="myModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Pet</b></h5>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-2">
+                <img src="./assets/images/dogimage2.jpg" height="100px" width="100px">
+              </div>
+              <div class="col-md-10">
+                <div *ngIf="currentFile" class="progress">
+                  <div
+                    class="progress-bar progress-bar-info progress-bar-striped"
+                    role="progressbar"
+                    attr.aria-valuenow="{{ progress }}"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    [ngStyle]="{ width: progress + '%' }"
+                  >
+                    {{ progress }}%
+                  </div>
+                </div>
+
+                <label class="btn btn-default">
+                  <input type="file" (change)="selectFile($event)"/>
+                </label>
+
+                <div class="alert alert-light" role="alert">{{ message }}</div>
+              </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Pet Name</label>
+              <div class="col-sm-10">
+                <input type="text" [(ngModel)]="pet.petName" class="form-control" placeholder="Pet Name"
+                       style="background-color: #EEFAFF;">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Birth Date</label>
+              <div class="col-sm-4">
+                <input type="date" [(ngModel)]="pet.dob" class="form-control" style="background-color: #EEFAFF;"
+                       max="{{today | date:'yyyy-MM-dd'}}">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Type</label>
+              <div class="col-sm-10">
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="pet.type">
+                  <mat-radio-button value="Dog">
+                    <div style="font-family:cambria">Dog</div>
+                  </mat-radio-button>
+                  <mat-radio-button value="Cat">
+                    <div style="font-family:cambria">Cat</div>
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Pet Weight</label>
+              <div class="col-sm-10">
+                <div class="input-group">
+                  <input type="number" [(ngModel)]="pet.weight" class="form-control" name="msg"
+                         placeholder="Pet Weight"
+                         style="background-color: #EEFAFF;">
+                  <span class="input-group-addon">kg</span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Gender</label>
+              <div class="col-sm-10">
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="pet.gender">
+                  <mat-radio-button value="Male">
+                    <div style="font-family:cambria">Male</div>
+                  </mat-radio-button>
+                  <mat-radio-button value="Female">
+                    <div style="font-family:cambria">Female</div>
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Breed</label>
+              <div class="col-sm-4">
+                <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                  <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                     role="button"
+                     id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span
+                    class="text-truncate">{{ breedSelectedValueName ? breedSelectedValueName : 'Select Breed' }}</span>
+                  </a>
+                  <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                    <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="breedSearchValue"
+                           (ngModelChange)="breedFilterDropdown($event)" placeholder="Search">
+                    <mat-option *ngFor="let option of breedFilteredList; let i=index"
+                                class="dropdown-item pointer text-contain"
+                                [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                (click)="breedSelectValue(option.code, option.name)">
+                      {{ option.name }}
+                    </mat-option>
+                    <div *ngIf="breedFilteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Color</label>
+              <div class="col-sm-4">
+                <div class="dropdown h-100" class="statusDropdownContainer button" style="background-color: #EEFAFF;">
+                  <a class="btn btn-white dropdown-toggle mb-2 statusFilterDropdown h-100 flex-middle" href="#"
+                     role="button"
+                     id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span
+                    class="text-truncate">{{ colorSelectedValueName ? colorSelectedValueName : 'Select Color' }}</span>
+                  </a>
+                  <div class="dropdown-menu w-100 pt-0" aria-labelledby="dropdownMenuButton">
+                    <input type="text" class="w-100 p-2 searchInput form-control" [ngModel]="colorSearchValue"
+                           (ngModelChange)="colorFilterDropdown($event)" placeholder="Search">
+                    <mat-option *ngFor="let option of colorFilteredList; let i=index"
+                                class="dropdown-item pointer text-contain"
+                                [ngClass]="{'alternateBackground': i%2 == 0 }"
+                                (click)="colorSelectValue(option.code, option.name)">
+                      {{ option.name }}
+                    </mat-option>
+                    <div *ngIf="colorFilteredList.length <=0" class="text-center text-muted mt-1">No item found</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" (click)="addPet()"
+                    data-dismiss="modal">
+              <b>Save</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div *ngIf="userRole == 'USROLE-2'">
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <mat-card>
+        <mat-card-title>
+          <font size="5"><b>Customers</b></font>
+        </mat-card-title>
+        <mat-card-content>
+          <table class="table table-bordered">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Name</th>
+              <th>Phone No</th>
+              <th>Address</th>
+              <th>Pets</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let cus of cusList">
+              <td>
+                {{cus.name}}
+              </td>
+              <td>
+                {{cus.phoneNo}}
+              </td>
+              <td>
+                {{cus.address}}
+              </td>
+              <td>
+                {{cus.pets}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+
+  <!--<div style="height: 130px;"></div>
+
+  <div style="position: fixed; bottom: 0; width: 100%" align="center">
+    <footer style="background-color: #524f46;">
+      <font color="white" style="font-family:cambria">
+        Copyright © 2021 - PawIn (Pet Kennel Management Software), Sri Lanka. All Rights Reserved<br/>
+        Developed by Nethmini
+      </font>
+    </footer>
+  </div>-->
+  <script>
+    import Bundle from '../../../node_modules__/istanbul-reports/lib/html-spa/assets/bundle';
+
+    export default {
+      components: { Bundle }
+    };
+  </script>

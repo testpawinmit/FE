@@ -1,0 +1,191 @@
+<br/>
+
+<div *ngIf="showSpinner" class="loading">Loading&#8230;</div>
+
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <mat-card>
+      <mat-card-title>
+        <font size="5"><b>Company Portal</b></font>
+      </mat-card-title>
+      <mat-card-content>
+        <form>
+          <div class="row">
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-1">
+              <br/>
+              <br/>
+            </div>
+          </div>
+          <br/>
+          <div class="form-group row">
+            <div class="col-sm-10">
+              <label for="inputEmail3" class="col-sm-2 col-form-label">Select Date</label>
+              <div class="col-sm-4">
+                <input type="date" class="form-control" [(ngModel)]="appointmentDate"
+                       style="background-color: #EEFAFF;">
+                <input type="hidden" [ngModel] ="appointmentDate | date:'yyyy-MM-dd'" (ngModelChange)="appointmentDate = $event">
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-5" align="right">
+              <button type="submit" (click)="getAppointment()" class="btn btn-primary"
+                      style="background-color: #38998C;">
+                <b>Search</b>
+              </button>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+
+          <table class="table table-striped">
+            <thead>
+            <tr style="background-color: #38998C; color: white;">
+              <th>Waiting</th>
+              <th>Check In</th>
+              <th>Check Out</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                <div class="row">
+                  <div class="col-md-12" align="center">
+                    <div *ngFor="let waiting of list1">
+                      <mat-card>
+                        <img src="{{imgURL}}{{waiting.petCode}}.jpg" height="50px" width="50px" alt="Card image cap"/>
+                        <h5 class="card-title">{{waiting.petName}}</h5>
+                        <p class="card-text">{{waiting.serviceName}}</p>
+                        <p class="card-text">{{waiting.dateRange}}</p>
+                        <button type="submit" (click)="updateAppointmentStatus(waiting.appCode, 'CHECK_IN')" class="btn btn-primary" style="background-color: #38998C;">
+                          <b>Check In</b>
+                        </button>
+                      </mat-card>
+                      <br/>
+                    </div>
+                    <br/>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="row">
+                  <div class="col-md-12" align="center">
+                    <div *ngFor="let waiting of list2">
+                      <mat-card>
+                        <img src="{{imgURL}}{{waiting.petCode}}.jpg" height="50px" width="50px" alt="Card image cap"/>
+                        <h5 class="card-title">{{waiting.petName}}</h5>
+                        <p class="card-text">{{waiting.serviceName}}</p>
+                        <p class="card-text">{{waiting.dateRange}}</p>
+                        <button type="submit" (click)="updateAppointmentStatus(waiting.appCode, 'CHECK_OUT')" class="btn btn-primary" style="background-color: #38998C;">
+                          <b>Check Out</b>
+                        </button>
+                      </mat-card>
+                      <br/>
+                    </div>
+                    <br/>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="row">
+                  <div class="col-md-12" align="center">
+                    <div *ngFor="let waiting of list3">
+                      <mat-card>
+                        <img src="{{imgURL}}{{waiting.petCode}}.jpg" height="50px" width="50px" alt="Card image cap"/>
+                        <h5 class="card-title">{{waiting.petName}}</h5>
+                        <p class="card-text">{{waiting.serviceName}}</p>
+                        <p class="card-text">{{waiting.dateRange}}</p>
+
+                      </mat-card>
+                      <br/>
+                    </div>
+                    <br/>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="form-group row">
+            <div class="col-sm-12" align="right">
+              <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-1"></div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+  <div class="col-md-1"></div>
+</div>
+
+<div class="container">
+
+  <!-- Modal1 -->
+  <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h5 class="modal-title" id="exampleModalLongTitle1"><b>Add Retail</b></h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Retail Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Retail Name"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Max Count</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputEmail3" placeholder="Max Count"
+                     style="background-color: #EEFAFF;">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;">
+              <b>Add</b>
+            </button>
+            <button type="submit" class="btn btn-primary" style="background-color: #38998C;" data-dismiss="modal">
+              <b>Cancel</b>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<br/>
+<br/>
+<br/>
+<br/>
